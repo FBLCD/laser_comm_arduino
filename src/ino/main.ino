@@ -17,9 +17,11 @@ int default_delay = 1000;
 
 /* ENCODING-DECODING VARIABLES */
 const String alphabet[] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+const int mult[] = {16, 8, 4, 2, 1};
 int concatenated_bytes = -1;
 char *buf = malloc(20);
 char *buf2;
+typedef unsigned char uchar;
 
 void setup() 
 {
@@ -37,6 +39,24 @@ void clear_variables()
   memset(buf2, 0, sizeof(buf2));
 }
 
+int d2t(char d)
+{
+ char str[2];
+ str[0] = d;
+ str[1] = '\0';
+ return (int) strtol(str, NULL, 10);
+}
+
+int strbin2dec(const char *strbin)
+{
+  int result = 0;
+  for (size_t i = 0; i < strlen(strbin); i++)
+  {
+    result = (d2t(strbin[i]) * mult[i]) + result;
+  }
+  return result;
+}
+
 void loop() 
 {
   if (digitalRead(BTNPin) || status) 
@@ -50,14 +70,14 @@ void loop()
     concatenated_bytes = atol(buf);
     buf2 = &buf[2];
     
-    if (sizeof(concatenated_bytes) > 4)
+    if (sizeof(concatenated_bytes) > 5)
     {
       clear_variables();
     }
     
-    if (count == 3) 
+    if (count == 4) 
     {
-      Serial.print(buf2);
+      Serial.print(strbin2dec(buf2));
       Serial.print(" ");
       clear_variables();
     }
