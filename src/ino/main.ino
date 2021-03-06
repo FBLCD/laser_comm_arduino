@@ -21,7 +21,6 @@ const int mult[] = {16, 8, 4, 2, 1};
 int concatenated_bytes = -1;
 char *buf = malloc(20);
 char *buf2;
-typedef unsigned char uchar;
 
 void setup() 
 {
