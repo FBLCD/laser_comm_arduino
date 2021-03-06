@@ -19,6 +19,7 @@ int default_delay = 1000;
 const String alphabet[] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 const int mult[] = {16, 8, 4, 2, 1};
 int concatenated_bytes = -1;
+int decimal_bytes;
 char *buf = malloc(20);
 char *buf2;
 
@@ -76,8 +77,12 @@ void loop()
     
     if (count == 4) 
     {
-      Serial.print(strbin2dec(buf2));
+      decimal_bytes = strbin2dec(buf2);
+      Serial.print(decimal_bytes);
+      Serial.print(" --> ");
+      Serial.print(alphabet[decimal_bytes]);
       Serial.print(" ");
+      
       clear_variables();
     }
     else 
