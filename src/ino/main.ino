@@ -18,8 +18,8 @@ int default_delay = 1000;
 /* ENCODING-DECODING VARIABLES */
 const String alphabet[] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 const int mult[] = {16, 8, 4, 2, 1};
-int concatenated_bytes = -1;
-int decimal_bytes;
+int concatenated_bits = -1;
+int decimal_bits;
 char *buf = malloc(20);
 char *buf2;
 
@@ -33,7 +33,7 @@ void setup()
 void clear_variables()
 {
   count = 0;
-  concatenated_bytes = -1;
+  concatenated_bits = -1;
   status = false;
   memset(buf, 0, sizeof(buf));
   memset(buf2, 0, sizeof(buf2));
@@ -66,21 +66,21 @@ void loop()
     input = analogRead(LDRPin);
     int output = (input > LIMIT) ? 1 : 0;
     
-    snprintf(buf, 20, "%d%d", concatenated_bytes, output);
-    concatenated_bytes = atol(buf);
+    snprintf(buf, 20, "%d%d", concatenated_bits, output);
+    concatenated_bits = atol(buf);
     buf2 = &buf[2];
     
-    if (sizeof(concatenated_bytes) > 5)
+    if (sizeof(concatenated_bits) > 5)
     {
       clear_variables();
     }
     
     if (count == 4) 
     {
-      decimal_bytes = strbin2dec(buf2);
-      Serial.print(decimal_bytes);
+      decimal_bits = strbin2dec(buf2);
+      Serial.print(decimal_bits);
       Serial.print(" --> ");
-      Serial.print(alphabet[decimal_bytes]);
+      Serial.print(alphabet[decimal_bits]);
       Serial.print(" ");
       
       clear_variables();
