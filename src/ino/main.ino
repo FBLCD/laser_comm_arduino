@@ -14,12 +14,12 @@ bool status = false; // 0
 int count = 0;
 int input = -1;
 int default_delay = 1000;
+//char *character = {0};
 
 /* ENCODING-DECODING VARIABLES */
-const String alphabet[] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
-const int mult[] = {16, 8, 4, 2, 1};
+const char *alphabet[] = {"H", "G", "N", "L", "X", "C", "W", "E", "D", "A", "Z", ".", "V", "Y", "R", "O", "J", "B", "Q", "I", "T", "K", "M", "P", "S", "F", "U", ",", "F", "W", "\n"};
+const char *sequences[] = {"00100", "10111", "01110", "10101", "11011", "11110", "11000", "01010", "11001", "00110", "11101", "11111", "00010", "00111", "01111", "01101", "10110", "01001", "11010", "10010", "11100", "10100", "01000", "10000", "00101", "10001", "00001", "10011", "00011", "01011", "00000"};const int mult[] = {16, 8, 4, 2, 1};
 int concatenated_bits = -1;
-int decimal_bits;
 char *buf = malloc(20);
 char *buf2;
 
@@ -39,22 +39,16 @@ void clear_variables()
   memset(buf2, 0, sizeof(buf2));
 }
 
-int d2t(char d)
+const char *parse_char(char *num)
 {
- char str[2];
- str[0] = d;
- str[1] = '\0';
- return (int) strtol(str, NULL, 10);
-}
-
-int strbin2dec(const char *strbin)
-{
-  int result = 0;
-  for (size_t i = 0; i < strlen(strbin); i++)
-  {
-    result = (d2t(strbin[i]) * mult[i]) + result;
-  }
-  return result;
+    for (int i = 0; i < sizeof(sequences); i++)
+    {
+      if (strcmp(num, sequences[i]) == 0)
+      {
+        return(alphabet[i]);
+      }
+    }
+    return NULL; // this shouldn't be reached 
 }
 
 void loop() 
@@ -77,12 +71,8 @@ void loop()
     
     if (count == 4) 
     {
-      decimal_bits = strbin2dec(buf2);
-      Serial.print(decimal_bits);
-      Serial.print(" --> ");
-      Serial.print(alphabet[decimal_bits]);
+      Serial.print(parse_char(buf2));
       Serial.print(" ");
-      
       clear_variables();
     }
     else 
