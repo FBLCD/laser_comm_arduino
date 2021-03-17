@@ -55,6 +55,10 @@ void loop()
 {
   if (digitalRead(BTNPin) || status) 
   {
+    Serial.print("Button is pressed - ");
+    Serial.print("round ");
+    Serial.println(count);
+    
     if (!status) status = true;
     
     input = analogRead(LDRPin);
