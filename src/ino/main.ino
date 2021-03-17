@@ -4,7 +4,7 @@
 
 /* PINOUT DEFINES */
 const int LDRPin = A5;
-const int BTNPin = 7;
+const int BTNPin = 11;
 
 /* (CONST) LOCAL VARIABLES */
 const int LIMIT = 1000;
