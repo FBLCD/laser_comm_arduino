@@ -21,6 +21,7 @@ int main(int argc, char *argv[])
 {
 	program_name = argv[0];
 	char *output;
+	int match = 0; // default is false
 	
 	if (argc < 3)
 	{
@@ -35,13 +36,21 @@ int main(int argc, char *argv[])
 #ifdef DEBUG_MODE
 		printf("[?] Decoding...\n");
 #endif
+
 		for (int i = 0; i < sizeof(sequences); i++)
 		{
 			if (strcmp(argv[2], sequences[i]) == 0)
 			{
 				output = alphabet[i];
+				match = 1;
 				break;
 			}
+			if (i == 30 && match != 1)
+			{
+				// no variable was found - handle it, otherwise we'll crash.
+				printf("[-] Invalid handle: %s\n", argv[2]);
+				return -1;
+			}				
 		}
 	}
 	
@@ -56,8 +65,15 @@ int main(int argc, char *argv[])
 			if (strcmp(argv[2], alphabet[i]) == 0)
 			{
 				output = sequences[i];
+				match = 1;
 				break;
 			}
+			if (i == 30 && match != 1)
+			{
+				// no variable was found - handle it, otherwise we'll crash.
+				printf("[-] Invalid handle: %s\n", argv[2]);
+				return -1;
+			}	
 		}
 	}
 	
@@ -65,12 +81,6 @@ int main(int argc, char *argv[])
 	{
 		show_usage();
 		return 0;
-	}
-	
-	if (output == NULL)
-	{
-		printf("[-] Invalid handle\n");
-		return -1;
 	}
 	
 	printf("[?] OUTPUT = %s\n", output);
