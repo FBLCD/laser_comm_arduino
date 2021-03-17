@@ -1,3 +1,5 @@
+#include <string.h>
+
 /* PROGRAM DEFINES */
 #define VERSION 1
 #define DEBUG_MODE 1
