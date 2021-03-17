@@ -14,7 +14,6 @@ bool status = false; // 0
 int count = 0;
 int input = -1;
 int default_delay = 1000;
-//char *character = {0};
 
 /* ENCODING-DECODING VARIABLES */
 const char *alphabet[] = {"H", "G", "N", "L", "X", "C", "W", "E", "D", "A", "Z", ".", "V", "Y", "R", "O", "J", "B", "Q", "I", "T", "K", "M", "P", "S", "F", "U", ",", "F", "W", "\n"};
@@ -55,10 +54,7 @@ void loop()
 {
   if (digitalRead(BTNPin) || status) 
   {
-    Serial.print("Button is pressed - ");
-    Serial.print("round ");
-    Serial.println(count);
-    
+   
     if (!status) status = true;
     
     input = analogRead(LDRPin);
