@@ -21,7 +21,6 @@ int default_delay = 1000;
 const char *alphabet[] = {"H", "G", "N", "L", "X", "C", "W", "E", "D", "A", "Z", ".", "V", "Y", "R", "O", "J", "B", "Q", "I", "T", "K", "M", "P", "S", "F", "U", ",", "F", "W", "\n"};
 const char *sequences[] = {"00100", "10111", "01110", "10101", "11011", "11110", "11000", "01010", "11001", "00110", "11101", "11111", "00010", "00111", "01111", "01101", "10110", "01001", "11010", "10010", "11100", "10100", "01000", "10000", "00101", "10001", "00001", "10011", "00011", "01011", "00000"};const int mult[] = {16, 8, 4, 2, 1};
 int concatenated_bits = -1;
-char *buf = malloc(20);
 char *buf2;
 
 void setup() 
@@ -61,7 +60,11 @@ void loop()
     
     input = analogRead(LDRPin);
     int output = (input > LIMIT) ? 1 : 0;
-    
+
+    char *buf = malloc(20);
+    if (!buf)
+      Serial.println("Failed to allocate memory");
+
     snprintf(buf, 20, "%d%d", concatenated_bits, output);
     concatenated_bits = atol(buf);
     buf2 = &buf[2];
