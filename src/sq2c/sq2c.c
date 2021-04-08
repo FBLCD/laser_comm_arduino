@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 				match = 1;
 				break;
 			}
-			if (i == 30 && match != 1)
+			if (i == 30 && match != 1) // FIXME: this is ugly
 			{
 				// no variable was found - handle it, otherwise we'll crash.
 				printf("[-] Invalid handle: %s\n", argv[2]);
@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
 				match = 1;
 				break;
 			}
-			if (i == 30 && match != 1)
+			if (i == 30 && match != 1) // FIXME: this is ugly
 			{
 				// no variable was found - handle it, otherwise we'll crash.
 				printf("[-] Invalid handle: %s\n", argv[2]);
