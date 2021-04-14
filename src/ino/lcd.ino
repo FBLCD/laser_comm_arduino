@@ -1,37 +1,56 @@
-// include the library code:
+// LCD library
 #include <LiquidCrystal.h>
 
-// initialize the library with the numbers of the interface pins
+// LCD Display
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7); 
 
-String readString;
+// Serial baudrate (default)
+int baudrate = 9600;
+
+// stdin
+String input_buffer;
+
+// debug
+// #define DEBUG_MODE 0
 
 void setup() {
-  Serial.begin(9600);
-  Serial.println("serial test 0021"); // so I can keep track of what is loaded
-  lcd.begin(16, 2);
+  Serial.begin(baudrate);
+
+  Serial.print("[?] Serial port opened [baudrate: ");
+  Serial.print(baudrate);
+  Serial.println("]");
+
+  lcd.begin(10, 2);
 }
 
 void loop() {
-
+  // loop over serial input
   while (Serial.available()) {
-    delay(2);  //delay to allow byte to arrive in input buffer
+    delay(2);
     char c = Serial.read();
-    ms.Match(pattern, 0);
-    readString += c;
+    Serial.println(c);
+    input_buffer += c;
   }
 
-  readString.replace(" ", "");
+  // delete last char 
+  int length = input_buffer.length();
+  input_buffer[length-1] = ' ';
 
-  if(readString.indexOf(";clear") > 0) {
-    Serial.println("Cleaning up..");
+#ifdef DEBUG_MODE
+  if (input_buffer != "") {
+    Serial.print("[+] Input string: ");
+    Serial.println(input_buffer);
+  }
+#endif
+
+  // handle serial commands
+  if (input_buffer.indexOf(";clear") > 0) {
+    Serial.println("[?] Cleaning up..");
     lcd.clear();
-    readString="";
+    input_buffer="";
   }
 
   lcd.setCursor(0,0);
-  //readString.remove(sizeof(readString) - 3);
-  //Serial.println(sizeof(readString));
+  lcd.print(input_buffer);
   lcd.flush();
-  lcd.print(readString);
 }
