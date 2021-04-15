@@ -4,6 +4,10 @@
 // LCD Display
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7); 
 
+// encoding/decoding
+String alphabet[] = {"H", "G", "N", "L", "X", "C", "W", "E", "D", "A", "Z", ".", "V", "Y", "R", "O", "J", "B", "Q", "I", "T", "K", "M", "P", "S", "F", "U", ",", "F", "W", "\n"};
+String sequences[] = {"33133", "13111", "31113", "13131", "11311", "11113", "11333", "31313", "11331", "33113", "11131", "11111", "33313", "33111", "31111", "31131", "13113", "31331", "11313", "13313", "11133", "13133", "31333", "13333", "33131", "13331", "33331", "13311", "33311", "31311", "33333"};
+
 // Serial baudrate (default)
 int baudrate = 9600;
 
@@ -11,7 +15,33 @@ int baudrate = 9600;
 String input_buffer;
 
 // debug
-// #define DEBUG_MODE 0
+//#define DEBUG_MODE 0
+
+String parse_seq(String chars)
+{
+    for (int i = 0; i < 31; i++)
+    {
+#ifdef DEBUG_MODE
+      Serial.print("(");
+      Serial.print(chars);
+      Serial.print(") ");
+      Serial.print(i);
+      Serial.print(" -> ");
+      Serial.println(alphabet[i]);
+#endif
+      if(chars.indexOf(alphabet[i]) >= 0)
+      {
+#ifdef DEBUG_MODE
+        Serial.print("[?] match: ");
+        Serial.print(chars);
+        Serial.print(" -> ");
+        Serial.println(sequences[i]);
+#endif
+        return(sequences[i]);
+      }
+    }
+    return ""; // this shouldn't be reached 
+}
 
 void setup() {
   Serial.begin(baudrate);
@@ -28,7 +58,6 @@ void loop() {
   while (Serial.available()) {
     delay(2);
     char c = Serial.read();
-    Serial.println(c);
     input_buffer += c;
   }
 
@@ -43,14 +72,10 @@ void loop() {
   }
 #endif
 
-  // handle serial commands
-  if (input_buffer.indexOf(";clear") > 0) {
-    Serial.println("[?] Cleaning up..");
-    lcd.clear();
+  if (input_buffer != "") {
+    lcd.setCursor(0,0);
+    lcd.print(parse_seq(input_buffer));
+    lcd.flush();
     input_buffer="";
   }
-
-  lcd.setCursor(0,0);
-  lcd.print(input_buffer);
-  lcd.flush();
 }
