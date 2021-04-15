@@ -8,14 +8,18 @@ LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 String alphabet[] = {"H", "G", "N", "L", "X", "C", "W", "E", "D", "A", "Z", ".", "V", "Y", "R", "O", "J", "B", "Q", "I", "T", "K", "M", "P", "S", "F", "U", ",", "F", "W", "\n"};
 String sequences[] = {"33133", "13111", "31113", "13131", "11311", "11113", "11333", "31313", "11331", "33113", "11131", "11111", "33313", "33111", "31111", "31131", "13113", "31331", "11313", "13313", "11133", "13133", "31333", "13333", "33131", "13331", "33331", "13311", "33311", "31311", "33333"};
 
-// Serial baudrate (default)
+// global defs
 int baudrate = 9600;
+int default_delay = 1000;
 
 // stdin
 String input_buffer;
 
+// pinout
+int laserPin = 11;
+
 // debug
-//#define DEBUG_MODE 0
+#define DEBUG_MODE 0
 
 String parse_seq(String chars)
 {
@@ -43,8 +47,18 @@ String parse_seq(String chars)
     return ""; // this shouldn't be reached 
 }
 
+void send_ldata(String sequence) {
+  for(auto x : sequence)
+  { 
+    int b = (x == '1') ? 1 : 0;
+    digitalWrite(laserPin, b);
+    delay(default_delay); // aligned with LDR code
+  }
+}
+
 void setup() {
   Serial.begin(baudrate);
+  pinMode(laserPin, OUTPUT);
 
   Serial.print("[?] Serial port opened [baudrate: ");
   Serial.print(baudrate);
@@ -76,6 +90,12 @@ void loop() {
     lcd.setCursor(0,0);
     lcd.print(parse_seq(input_buffer));
     lcd.flush();
+    send_ldata(parse_seq(input_buffer)); // if no laser is connected this will crash
+#ifdef DEBUG_MODE
+    Serial.print("[+] Sent ");
+    Serial.print(input_buffer);
+    Serial.println("to the host...");
+#endif
     input_buffer="";
   }
 }
