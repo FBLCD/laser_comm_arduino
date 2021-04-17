@@ -15,11 +15,14 @@ int default_delay = 1000;
 // stdin
 String input_buffer;
 
+// stdout
+String output_buffer;
+
 // pinout
 int laserPin = 11;
 
 // debug
-#define DEBUG_MODE 0
+//#define DEBUG_MODE 0
 
 String parse_seq(String chars)
 {
@@ -88,14 +91,22 @@ void loop() {
 
   if (input_buffer != "") {
     lcd.setCursor(0,0);
-    lcd.print(parse_seq(input_buffer));
-    lcd.flush();
-    send_ldata(parse_seq(input_buffer)); // if no laser is connected this will crash
+    for (int i = 0; i < sizeof(input_buffer); i++)
+    {
 #ifdef DEBUG_MODE
-    Serial.print("[+] Sent ");
-    Serial.print(input_buffer);
-    Serial.println("to the host...");
+      Serial.print("[?] Sending ");
+      Serial.println(String(input_buffer[i]));
 #endif
+      send_ldata(parse_seq(String(input_buffer[i])));  // if no laser is connected this will crash
+      output_buffer += parse_seq(String(input_buffer[i]));
+    }
+    lcd.print(output_buffer);
+    lcd.flush();
+    Serial.print("[+] Sent ");
+    Serial.print(sizeof(output_buffer));
+    Serial.print(" bits ( ");
+    Serial.print(input_buffer);
+    Serial.println(") to the host...");
     input_buffer="";
   }
 }
