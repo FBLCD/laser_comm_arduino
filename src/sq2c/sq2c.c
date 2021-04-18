@@ -20,7 +20,7 @@ void show_usage()
 int main(int argc, char *argv[])
 {
 	program_name = argv[0];
-	char *output;
+	const char *output;
 	int match = 0; // default is false
 	
 	if (argc < 3)
