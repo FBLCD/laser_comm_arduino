@@ -10,7 +10,7 @@ String sequences[] = {"33133", "13111", "31113", "13131", "11311", "11113", "113
 
 // global defs
 int baudrate = 9600;
-int default_delay = 1000;
+int default_delay = 250;
 
 // stdin
 String input_buffer;
