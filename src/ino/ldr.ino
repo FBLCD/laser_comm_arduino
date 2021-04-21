@@ -3,6 +3,12 @@
 /* PROGRAM DEFINES */
 #define VERSION 1
 #define DEBUG_MODE 1
+#define btnRIGHT  0
+#define btnUP     1
+#define btnDOWN   2
+#define btnLEFT   3
+#define btnSELECT 4
+#define btnNONE   5
 
 /* PINOUT DEFINES */
 const int LDRPin = A5;
@@ -16,6 +22,8 @@ bool status = false; // 0
 int count = 0;
 int input = -1;
 int default_delay = 1000;
+int lcd_key     = 0;
+int adc_key_in  = 0;
 
 /* ENCODING-DECODING VARIABLES */
 const char *alphabet[] = {"H", "G", "N", "L", "X", "C", "W", "E", "D", "A", "Z", ".", "V", "Y", "R", "O", "J", "B", "Q", "I", "T", "K", "M", "P", "S", "F", "U", ",", "F", "W", "\n"};
@@ -39,6 +47,19 @@ void clear_variables()
   memset(buf2, 0, sizeof(buf2));
 }
 
+
+int read_LCD_buttons() 
+{
+  adc_key_in = analogRead(0);
+  if (adc_key_in > 900) return btnNONE;
+  if (adc_key_in < 50)   return btnRIGHT; 
+  if (adc_key_in < 250)  return btnUP;
+  if (adc_key_in < 450)  return btnDOWN;
+  if (adc_key_in < 650)  return btnLEFT;
+  if (adc_key_in < 850)  return btnSELECT; 
+  return btnNONE;
+}
+
 const char *parse_char(char *num)
 {
     for (int i = 0; i < sizeof(sequences); i++)
@@ -53,7 +74,7 @@ const char *parse_char(char *num)
 
 void loop() 
 {
-  if (digitalRead(BTNPin) || status) 
+  if (read_LCD_buttons() == 4)  
   {
    
     if (!status) status = true;
