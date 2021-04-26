@@ -1,4 +1,8 @@
 #include <string.h>
+#include <LiquidCrystal.h>
+
+// LCD Display
+LiquidCrystal lcd(8, 9, 4, 5, 6, 7); 
 
 /* PROGRAM DEFINES */
 #define VERSION 1
@@ -21,7 +25,7 @@ bool status = false; // 0
 /* LOCAL VARIABLES */
 int count = 0;
 int input = -1;
-int default_delay = 1000;
+int default_delay = 500;
 int lcd_key     = 0;
 int adc_key_in  = 0;
 
@@ -29,11 +33,12 @@ int adc_key_in  = 0;
 const char *alphabet[] = {"H", "G", "N", "L", "X", "C", "W", "E", "D", "A", "Z", ".", "V", "Y", "R", "O", "J", "B", "Q", "I", "T", "K", "M", "P", "S", "F", "U", ",", "F", "W", "\n"};
 const char *sequences[] = {"33133", "13111", "31113", "13131", "11311", "11113", "11333", "31313", "11331", "33113", "11131", "11111", "33313", "33111", "31111", "31131", "13113", "31331", "11313", "13313", "11133", "13133", "31333", "13333", "33131", "13331", "33331", "13311", "33311", "31311", "33333"};
 int concatenated_bits = -1;
-char *buf2;
+char *buf2, *buf;
 
 void setup() 
 {
   Serial.begin(9600);
+  lcd.begin(10, 2);
   pinMode(LDRPin, INPUT);
   pinMode(BTNPin, INPUT);
 }
@@ -46,7 +51,6 @@ void clear_variables()
   memset(buf, 0, sizeof(buf));
   memset(buf2, 0, sizeof(buf2));
 }
-
 
 int read_LCD_buttons() 
 {
@@ -74,9 +78,8 @@ const char *parse_char(char *num)
 
 void loop() 
 {
-  if (read_LCD_buttons() == 4)  
+  if (read_LCD_buttons() == 4 || status)  
   {
-   
     if (!status) status = true;
     
     input = analogRead(LDRPin);
@@ -97,7 +100,7 @@ void loop()
     
     if (count == 4) 
     {
-      Serial.print(parse_char(buf2));
+      lcd.print(parse_char(buf2));
       Serial.print(" ");
       clear_variables();
     }
@@ -105,6 +108,9 @@ void loop()
     {
       count += 1;
     }
+  } else if (read_LCD_buttons() == 3)
+  {
+    lcd.clear();
   }
   delay(default_delay); 
 }
