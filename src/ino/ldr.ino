@@ -21,6 +21,7 @@ const int BTNPin = 11;
 /* (CONST) LOCAL VARIABLES */
 const int LIMIT = 1000;
 bool status = false; // 0
+int rgr = 0;
 
 /* LOCAL VARIABLES */
 int count = 0;
@@ -47,6 +48,7 @@ void clear_variables()
 {
   count = 0;
   concatenated_bits = -1;
+  rgr = 0;
   status = false;
   memset(buf, 0, sizeof(buf));
   memset(buf2, 0, sizeof(buf2));
@@ -76,30 +78,79 @@ const char *parse_char(char *num)
     return NULL; // this shouldn't be reached 
 }
 
+int wait_for_sequence()
+{
+  while (rgr != 1)
+  {
+    if (analogRead(LDRPin) > LIMIT)
+    {
+      Serial.println("[!] Recieved start bytes.");
+      rgr = 0;
+      return 1;
+    }
+  }
+  return 0; // we should never reach this
+}
+
 void loop() 
 {
-  if (read_LCD_buttons() == 4 || status)  
+  if (wait_for_sequence() == 1 || status)  
   {
     if (!status) status = true;
-    
+
+#ifdef DEBUG_MODE
+    Serial.print("[?] Status = ");
+    Serial.println(status);
+    Serial.print("[?] COUNT = ");
+    Serial.println(count);
+#endif
+
+#ifdef DEBUG_MODE
+    Serial.println("[?] Begin reading...");
+#endif
+
     input = analogRead(LDRPin);
     int output = (input > LIMIT) ? 1 : 3;
 
+#ifdef DEBUG_MODE
+    Serial.println("[?] Allocating memory...");
+#endif
     char *buf = malloc(20);
     if (!buf)
       Serial.println("Failed to allocate memory");
 
+#ifdef DEBUG_MODE
+    Serial.println("[?] Concatenating bytes...");
+#endif
     snprintf(buf, 20, "%d%d", concatenated_bits, output);
     concatenated_bits = atol(buf);
     buf2 = &buf[2];
+
+#ifdef DEBUG_MODE
+    Serial.println("[?] Done with parsing...");
+#endif
     
     if (sizeof(concatenated_bits) > 5)
     {
+#ifdef DEBUG_MODE
+      Serial.println("[?] Cleaning up...");
+#endif
       clear_variables();
     }
-    
+
+#ifdef DEBUG_MODE
+    Serial.println("===============");
+    Serial.print("| BUF2 = ");
+    Serial.print(buf2);
+    Serial.println("    |");
+    Serial.println("===============");
+#endif
+
     if (count == 4) 
     {
+#ifdef DEBUG_MODE
+      Serial.println("[?] Count equals 4, parsing sequence...");
+#endif
       lcd.print(parse_char(buf2));
       Serial.print(" ");
       clear_variables();
