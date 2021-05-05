@@ -11,6 +11,7 @@ String sequences[] = {"33133", "13111", "31113", "13131", "11311", "11113", "113
 // global defs
 int baudrate = 9600;
 int default_delay = 250;
+int status = 0;
 
 // stdin
 String input_buffer;
@@ -55,7 +56,7 @@ void send_ldata(String sequence) {
   { 
     int b = (x == '1') ? 1 : 0;
     digitalWrite(laserPin, b);
-    delay(default_delay); // aligned with LDR code
+    delay(500); // aligned with LDR code
   }
 }
 
@@ -68,9 +69,11 @@ void setup() {
   Serial.println("]");
 
   lcd.begin(10, 2);
+  digitalWrite(laserPin, LOW);
 }
 
 void loop() {
+  status += 1;
   // loop over serial input
   while (Serial.available()) {
     delay(2);
@@ -81,6 +84,14 @@ void loop() {
   // delete last char 
   int length = input_buffer.length();
   input_buffer[length-1] = ' ';
+
+  if (status = 1 && input_buffer != "") {
+    Serial.println("[?] Sending start sequence");
+    digitalWrite(laserPin, HIGH);
+    delay(100);
+    digitalWrite(laserPin, LOW);
+    delay(100);
+  }
 
 #ifdef DEBUG_MODE
   if (input_buffer != "") {
@@ -108,5 +119,7 @@ void loop() {
     Serial.print(input_buffer);
     Serial.println(") to the host...");
     input_buffer="";
+    delay(200);
+    digitalWrite(laserPin, LOW);
   }
 }

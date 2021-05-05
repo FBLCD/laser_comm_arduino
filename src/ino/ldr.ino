@@ -80,6 +80,9 @@ const char *parse_char(char *num)
 
 int wait_for_sequence()
 {
+  if (status) {
+    return 0;
+  }
   while (rgr != 1)
   {
     if (analogRead(LDRPin) > LIMIT)
@@ -94,9 +97,10 @@ int wait_for_sequence()
 
 void loop() 
 {
-  if (wait_for_sequence() == 1 || status)  
+  if (wait_for_sequence() == 1 || status == 1)  
   {
     if (!status) status = true;
+    delay(200);
 
 #ifdef DEBUG_MODE
     Serial.print("[?] Status = ");
