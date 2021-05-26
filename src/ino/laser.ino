@@ -23,7 +23,7 @@ String output_buffer;
 int laserPin = 11;
 
 // debug
-//#define DEBUG_MODE 0
+#define DEBUG_MODE 0
 
 String parse_seq(String chars)
 {
