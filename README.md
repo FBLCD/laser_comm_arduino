@@ -27,4 +27,4 @@ The purpose of this project is to create an "_encrypted_" communication system t
 * [@Layton-Coder](https://github.com/Layton-Coder)
 
 ## License
-This project is licensed under the GPL (v3) license. See `LICENSE.GPL` for more details.
+This project is licensed under the GPL (v3) license. See `LICENSE` for more details.
