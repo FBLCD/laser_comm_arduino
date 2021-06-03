@@ -5,6 +5,8 @@
 
 ![GitHub](https://img.shields.io/github/license/FBLCD/laser_comm_arduino)
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/FBLCD/laser_comm_arduino?include_prereleases)
+![GitHub Issues](https://img.shields.io/bitbucket/issues-raw/FBLCD/laser_comm_arduino?color=red)
+![Github Contributors](https://img.shields.io/github/contributors/FBLCD/laser_comm_arduino)
 
 ## Description
 The FBLCD project, or "_Five-bit Laser Communication Device_", is based on the laser communication between two Arduino boards using 5-bit sequences (formed by 0s and 1s).
@@ -18,7 +20,7 @@ But two are needed to perform operations with communicative intent (as well as o
 
 ## Goal/Aim of the project
 
-The purpose of this project is to create an "_encrypted_" communication system that only the two "Arduinos" are able to decrypt/encrypt. The encryption system of this project is unique, designed by us and no one has the ability to translate it if they do not have the decryption key or resort to simple decryption knowledge ("_hardcoded_").
+The purpose of this project is to create a communication system that only the two "Arduinos" are able to decrypt/encrypt. The encryption system of this project is hardcoded in two string arrays; one array for sequences and the other array for letters.
 
 ## Group components
 
