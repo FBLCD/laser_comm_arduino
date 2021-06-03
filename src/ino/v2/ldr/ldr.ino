@@ -39,11 +39,11 @@ void loop() {
       start_bit += 1;
       if (start_bit == 5)
       {
-        Serial.println(input);
         lcd.print(s2c(input));
         start_bit = -1;
         input = "";
       }
       delay(500);
    }
+   delay(1.5);
 }

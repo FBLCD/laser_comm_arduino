@@ -55,7 +55,20 @@ void loop() {
     delay(1);
     digitalWrite(11, LOW);
     Serial.println(c2s(input_buffer));
-    s2l(c2s(input_buffer));
+    if (input_buffer.length() ==  2) {
+      Serial.print("short");
+      s2l(c2s(input_buffer));
+    } else {
+      for (int i = 0; i < input_buffer.length() - 1; i++) {
+        Serial.println(input_buffer[i]);
+        s2l(c2s(String(input_buffer[i])));
+        delay(500);
+        digitalWrite(11, HIGH);
+        delay(1);
+        digitalWrite(11, LOW);
+      }
+    }
+
     input_buffer = "";
     digitalWrite(11, LOW);
   }
