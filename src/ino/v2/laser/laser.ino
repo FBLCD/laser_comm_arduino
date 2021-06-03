@@ -9,6 +9,18 @@ String input_buffer;
 /* Array Length */
 int array_size = 31;
 
+/* Custom characters */
+byte Check[] = {
+  B00000,
+  B00001,
+  B00011,
+  B10110,
+  B11100,
+  B01000,
+  B00000,
+  B00000
+};
+
 /* Hardcoded arrays (for parsing) */
 String alphabet[] = {"H", "G", "N", "L", "X", "C", "W", "E", "D", "A", "Z", ".", "V", "Y", "R", "O", "J", "B", "Q", "I", "T", "K", "M", "P", "S", "F", "U", ",", "F", "W", " "};
 String sequences[] = {"33133", "13111", "31113", "13131", "11311", "11113", "11333", "31313", "11331", "33113", "11131", "11111", "33313", "33111", "31111", "31131", "13113", "31331", "11313", "13313", "11133", "13133", "31333", "13333", "33131", "13331", "33331", "13311", "33311", "31311", "33333"};
@@ -25,6 +37,9 @@ void setup() {
 
   /* Turn off laser by default */
   digitalWrite(11, LOW);
+
+  /* Create custom char */
+  lcd.createChar(0, Check);
 }
 
 String c2s(String c) {
@@ -88,5 +103,10 @@ void loop() {
 
     /* Turn off the laser diode */
     digitalWrite(11, LOW);
+
+    /* Success */
+    lcd.setCursor(0,0);
+    lcd.write((byte)0);
+    lcd.print(" All ok!");
   }
 }
