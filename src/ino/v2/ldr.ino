@@ -13,11 +13,7 @@ String alphabet[] = {"H", "G", "N", "L", "X", "C", "W", "E", "D", "A", "Z", ".",
 String sequences[] = {"33133", "13111", "31113", "13131", "11311", "11113", "11333", "31313", "11331", "33113", "11131", "11111", "33313", "33111", "31111", "31131", "13113", "31331", "11313", "13313", "11133", "13133", "31333", "13333", "33131", "13331", "33331", "13311", "33311", "31311", "33333"};
 
 String s2c(String s) {
-  for (int i = 0; i < 31; i++) {
-    if (s.indexOf(sequences[i]) >= 0) {
-      return alphabet[i];
-    }
-  }
+  for (int i = 0; i < 31; i++) if (s == sequences[i]) return alphabet[i];
 }
 
 void setup() {
@@ -41,10 +37,9 @@ void loop() {
       int output = (analogRead(A5) > limit) ? 1 : 3;
       input += String(output);
       start_bit += 1;
-      if (start_bit == 4)
+      if (start_bit == 5)
       {
-        lcd.print(input);
-        lcd.print(" ");
+        lcd.print(s2c(input));
         start_bit = -1;
         input = "";
       }
